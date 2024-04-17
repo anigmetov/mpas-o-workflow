@@ -1,13 +1,18 @@
 #!/bin/bash
 
+export LOWFIVE_PATH=/home/narn/code/LowFive/install_for_scorpio
+export LOWFIVE_LIBRARY=${LOWFIVE_PATH}/lib/liblowfive.so
+export LOWFIVE_DIST_LIBRARY=${LOWFIVE_PATH}/lib/liblowfive-dist.a
+export LD_LIBRARY_PATH=${LOWFIVE_PATH}/lib:$LD_LIBRARY_PATH
+export HDF5_PLUGIN_PATH=${LOWFIVE_PATH}/lib
+export HDF5_VOL_CONNECTOR="lowfive under_vol=0;under_info={};"
+
 export SPACKENV=mpas
 export YAML=$PWD/env.yaml
 
 # add mpas-o-scorpio and lowfive and wilkins spack repos
 echo "adding custom spack repo for scorpio"
 spack repo add mpas-o-scorpio > /dev/null 2>&1
-echo "adding spack repo for lowfive"
-spack repo add lowfive > /dev/null 2>&1
 echo "adding spack repo for wilkins"
 spack repo add wilkins > /dev/null 2>&1
 
@@ -20,8 +25,6 @@ spack env create $SPACKENV $YAML
 # activate environment
 echo "activating spack environment"
 spack env activate $SPACKENV
-
-# spack develop lowfive@master
 
 # add netcdf in develop mode
 # spack develop netcdf-c@4.8.1+mpi
@@ -44,7 +47,6 @@ export NETCDFF=`spack location -i netcdf-fortran`
 export PNETCDF=`spack location -i parallel-netcdf`
 export PIO=`spack location -i mpas-o-scorpio`
 export HDF5=`spack location -i hdf5`
-export LOWFIVE=`spack location -i lowfive`
 export HENSON=`spack location -i henson`
 export USE_PIO2=true
 export OPENMP=false
@@ -62,18 +64,16 @@ export PROFILE_PRELIB="-L$HENSON/lib -lhenson-pmpi"
 # cd components/mpas-ocean
 # make gfortran
 
+
 # set LD_LIBRARY_PATH
 echo "setting flags for running MPAS-Ocean"
 export LD_LIBRARY_PATH=$NETCDF/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$NETCDFF/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$HDF5/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$PIO/lib:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=$LOWFIVE/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$HENSON/lib:$LD_LIBRARY_PATH
 
-# enable VOL plugin
-export HDF5_PLUGIN_PATH=$LOWFIVE/lib
-export HDF5_VOL_CONNECTOR="lowfive under_vol=0;under_info={};"
+
 
 # give openMP 1 core for now to prevent using all cores for threading
 # could set a more reasonable number to distribute cores between mpi + openMP
