@@ -11,7 +11,7 @@ export HDF5_VOL_CONNECTOR="lowfive under_vol=0;under_info={};"
 # activate the environment
 export SPACKENV=mpas
 spack env deactivate > /dev/null 2>&1
-spack env activate $SPACKENV
+spack env activate -p $SPACKENV
 echo "activated spack environment $SPACKENV"
 
 # set spack locations and vars for building mpas-o
@@ -35,6 +35,7 @@ echo "environment variables are set for building MPAS-Ocean"
 # set LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$NETCDF/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$NETCDFF/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$PNETCDF/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$HDF5/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$PIO/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$HENSON/lib:$LD_LIBRARY_PATH
